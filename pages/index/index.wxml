@@ -1,0 +1,106 @@
+<!--index.wxml-->
+
+<view class="content-bg">
+  <view class="content">
+    <view class="left">
+      <view wx:for="{{dataArray}}">
+        <template is="template" wx:if="{{index%2==0}}" data="{{object : item.data.content.data}}" />
+      </view>
+    </view>
+
+    <view class="right">
+      <view wx:for="{{dataArray}}">
+        <template is="template" wx:if="{{index%2==1}}" data="{{object : item.data.content.data}}" />
+      </view>
+    </view>
+  </view>
+</view>
+
+<template name="template">
+  <view class="item">
+    <image class="item-img" src="{{object.cover.detail}}" mode="widthFix"></image>
+    <view class="item-title">{{getTitle.sub(object.title,object.description)}}</view>
+    <text class='description'>{{getDescription.sub(object.title,object.description)}}</text>
+    <view class="author-view">
+      <image class="avatar" src="{{getAvatar.sub(object.owner,object.author)}}"></image>
+      <text class="author-name">{{getNickname.sub(object.owner,object.author)}}</text>
+      <text class="time">{{format.toDate(getTime.sub(object.createTime,object.date))}}</text>
+    </view>
+  </view>
+</template>
+
+
+
+<!-- 获取标题 -->
+<wxs module="getTitle">
+  var sub = function(title, description) {
+    if (title.length == 0) {
+      return description
+    } else {
+      return title
+    }
+  }
+  module.exports.sub = sub;
+</wxs>
+
+<!-- 获取描述内容 -->
+<wxs module="getDescription">
+  var sub = function(title, description) {
+    if (title.length != 0) {
+      return description
+    } else {
+      return ""
+    }
+  }
+  module.exports.sub = sub;
+</wxs>
+
+<!-- 获取头像 -->
+<wxs module="getAvatar">
+  var sub = function(owner, author) {
+    if (owner == null) {
+      return author.icon
+    } else {
+      return owner.avatar
+    }
+  }
+  module.exports.sub = sub;
+</wxs>
+
+<!-- 获取昵称 -->
+<wxs module="getNickname">
+  var sub = function(owner, author) {
+    if (owner == null) {
+      return author.name
+    } else {
+      return owner.nickname
+    }
+  }
+  module.exports.sub = sub;
+</wxs>
+
+<!-- 获取发布时间 -->
+<wxs module="getTime">
+  var sub = function(createTime, date) {
+    if (createTime != null) {
+      return createTime
+    } else {
+      return date
+    }
+  }
+  module.exports.sub = sub;
+</wxs>
+
+<!-- 时间戳转换为时间格式 -->
+<!-- var Y = date.getFullYear() + '-'; 获取年份-->
+<wxs module="format">
+  var toDate = function(time) {
+    var date = getDate(time);
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    var h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    return (M + D + " " + h + ":" + m);
+  }
+  module.exports.toDate = toDate;
+</wxs>
